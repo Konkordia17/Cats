@@ -10,7 +10,7 @@ interface CatsApi {
 
     @GET("/v1/images/search")
     suspend fun getCatsByPage(
-        @Query("page") page: Int,
+        @Query("limit") limit: Int,
         @Query("api_key") api_key: String = API_KEY
     ): List<CatModel>
 }

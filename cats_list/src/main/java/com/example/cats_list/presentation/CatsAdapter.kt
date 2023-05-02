@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.cats_list.Cat
+import com.example.cats_list.R
 import com.example.cats_list.databinding.ItemCatBinding
 
 class CatsAdapter(private val onItemClicked: (cat: Cat) -> Unit) :
@@ -26,10 +28,13 @@ class CatsAdapter(private val onItemClicked: (cat: Cat) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(cat: Cat) {
-            binding.catName.text = cat.id
             itemView.setOnClickListener {
                 onItemClicked(cat)
             }
+            Glide.with(binding.catImage)
+                .load(cat.url)
+                .placeholder(R.drawable.cat_placeholder)
+                .into(binding.catImage)
         }
     }
 

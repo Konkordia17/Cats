@@ -8,8 +8,8 @@ import javax.inject.Inject
 
 class CatsRepositoryImpl @Inject constructor(private val api: CatsApi) : CatsRepository {
 
-    override suspend fun getCats(page: Int): List<Cat> {
-        return api.getCatsByPage(page).map {
+    override suspend fun getCats(limit: Int): List<Cat> {
+        return api.getCatsByPage(limit).map {
             mapCatsModelToCat(it)
         }
     }

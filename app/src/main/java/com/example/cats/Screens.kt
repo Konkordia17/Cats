@@ -5,7 +5,6 @@ import com.github.terrakok.cicerone.androidx.FragmentScreen
 
 
 object Screens {
-
     fun catsFragment() = FragmentScreen {
         CatsListFragment.newInstance() }
 }

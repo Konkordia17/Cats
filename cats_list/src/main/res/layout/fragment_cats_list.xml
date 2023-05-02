@@ -8,6 +8,7 @@
         android:id="@+id/cats_list"
         android:layout_width="match_parent"
         tools:listitem="@layout/item_cat"
+        android:background="@color/cats_list_bag"
         android:layout_height="match_parent"/>
 
 </FrameLayout>

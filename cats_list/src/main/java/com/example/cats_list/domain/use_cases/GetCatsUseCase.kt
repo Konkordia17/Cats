@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class GetCatsUseCase @Inject constructor(private val repository: CatsRepository) {
 
-   suspend fun getCats(page: Int): List<Cat> {
-       return repository.getCats(page)
+   suspend fun getCats(limit: Int): List<Cat> {
+       return repository.getCats(limit)
    }
 }

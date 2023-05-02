@@ -4,5 +4,5 @@ import com.example.cats_list.Cat
 
 interface CatsRepository {
 
-   suspend fun getCats(page: Int): List<Cat>
+   suspend fun getCats(limit: Int): List<Cat>
 }

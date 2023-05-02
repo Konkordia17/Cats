@@ -7,13 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.cats_list.R
 import com.example.cats_list.databinding.FragmentCatsListBinding
 import com.example.cats_list.di.CatsListComponent
-import com.example.cats_list.di.CatsListComponentProvider
+import com.example.cats_list.di.CatsListComponentDependenciesProvider
+import com.example.cats_list.di.DaggerCatsListComponent
+import com.example.cats_list.getCurrentPosition
 import com.example.storage.data.CatsApi
+import com.github.terrakok.cicerone.Router
 import javax.inject.Inject
 
 class CatsListFragment : Fragment(R.layout.fragment_cats_list) {
@@ -26,13 +29,20 @@ class CatsListFragment : Fragment(R.layout.fragment_cats_list) {
     lateinit var catsApi: CatsApi
 
     @Inject
+    lateinit var router: Router
+
+    @Inject
     lateinit var vmFactory: ViewModelFactory
     lateinit var vm: CatsListViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        catsComponent = (context.applicationContext as CatsListComponentProvider)
-            .getCatsListComponent()
+        val catsComponentDependencies =
+            (context.applicationContext as CatsListComponentDependenciesProvider)
+                .getCatsListComponentDependencies()
+        catsComponent = DaggerCatsListComponent.builder()
+            .catsListComponentDependencies(catsComponentDependencies)
+            .build()
         catsComponent.injectCatsListFragment(this)
         vmFactory = catsComponent.getViewModelFactory()
         vm = ViewModelProvider(this, vmFactory)[CatsListViewModel::class.java]
@@ -50,11 +60,11 @@ class CatsListFragment : Fragment(R.layout.fragment_cats_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initCatsList()
-        vm.getCats(1)
+        vm.getCats(CATS_LIMIT)
         observeLiveData()
     }
 
-   private fun observeLiveData() {
+    private fun observeLiveData() {
         vm.catsList.observe(viewLifecycleOwner) { cats ->
             catsAdapter.submitList(cats)
         }
@@ -62,14 +72,18 @@ class CatsListFragment : Fragment(R.layout.fragment_cats_list) {
 
     private fun initCatsList() {
         catsAdapter = CatsAdapter { cat ->
+            router.navigateTo(Screens.catDescriptionFragment(vm.mapCatToCatDescription(cat)))
         }
         with(binding.catsList) {
             adapter = catsAdapter
-            layoutManager = LinearLayoutManager(context)
-            val dividerItemDecoration =
-                DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
-            addItemDecoration(dividerItemDecoration)
+            layoutManager = GridLayoutManager(context, SPAN_COUNT)
             setHasFixedSize(true)
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val position = getCurrentPosition()
+                    vm.onPositionChanged(position)
+                }
+            })
         }
     }
 
@@ -80,7 +94,8 @@ class CatsListFragment : Fragment(R.layout.fragment_cats_list) {
 
 
     companion object {
-
+        private const val SPAN_COUNT = 2
+        const val CATS_LIMIT = 15
         fun newInstance(): CatsListFragment {
             return CatsListFragment()
         }
