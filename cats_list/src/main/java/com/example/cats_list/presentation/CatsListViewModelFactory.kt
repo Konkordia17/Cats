@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.cats_list.domain.use_cases.GetCatsUseCase
 import javax.inject.Inject
 
-class ViewModelFactory @Inject constructor(
+class CatsListViewModelFactory @Inject constructor(
     val catsUseCase: GetCatsUseCase,
 ) : ViewModelProvider.Factory {
 

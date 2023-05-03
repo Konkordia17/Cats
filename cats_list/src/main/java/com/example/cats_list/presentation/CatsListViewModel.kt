@@ -3,7 +3,7 @@ package com.example.cats_list.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.cat_description.models.CatDescription
+//import com.example.cat_description.models.CatDescription
 import com.example.cats_list.Cat
 import com.example.cats_list.domain.use_cases.GetCatsUseCase
 import com.example.cats_list.presentation.CatsListFragment.Companion.CATS_LIMIT
@@ -30,13 +30,6 @@ class CatsListViewModel(private val catsUseCase: GetCatsUseCase) : ViewModel() {
             currentCatsList = currentCatsList + cats
             _catsList.postValue(currentCatsList)
         }
-    }
-
-    fun mapCatToCatDescription(cat: Cat): CatDescription {
-        return CatDescription(
-            id = cat.id,
-            url = cat.url
-        )
     }
 
     override fun onCleared() {

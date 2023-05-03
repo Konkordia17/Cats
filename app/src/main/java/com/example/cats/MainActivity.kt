@@ -25,6 +25,6 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         (application as App).appComponent.injectMainActivity(this)
         navigatorHolder.setNavigator(navigator)
-        router.navigateTo(Screens.catsFragment())
+        router.navigateTo(Screen().catsFragment())
     }
 }

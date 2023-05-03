@@ -1,5 +1,7 @@
 package com.example.cats.di
 
+import com.example.cats.Screen
+import com.example.cats_list.presentation.Screens
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Router
@@ -22,5 +24,10 @@ class NavigationModule {
     @Singleton
     fun provideNavigatorHolder(): NavigatorHolder {
         return cicerone.getNavigatorHolder()
+    }
+    @Provides
+    @Singleton
+    fun provideScreen(): Screens {
+        return Screen()
     }
 }

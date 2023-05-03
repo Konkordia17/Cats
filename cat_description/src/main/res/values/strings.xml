@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="download_picture">Скачать картинку</string>
+    <string name="is_downloaded_picture">Картинка сохранена в папку Downloads</string>
+    <string name="is_error_downloading">Ошибка скачивания. Проверьте соединение с интернетом</string>
 </resources>

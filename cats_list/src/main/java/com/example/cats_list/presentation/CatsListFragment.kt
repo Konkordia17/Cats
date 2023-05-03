@@ -32,7 +32,10 @@ class CatsListFragment : Fragment(R.layout.fragment_cats_list) {
     lateinit var router: Router
 
     @Inject
-    lateinit var vmFactory: ViewModelFactory
+    lateinit var screen: Screens
+
+    @Inject
+    lateinit var vmFactory: CatsListViewModelFactory
     lateinit var vm: CatsListViewModel
 
     override fun onAttach(context: Context) {
@@ -72,7 +75,7 @@ class CatsListFragment : Fragment(R.layout.fragment_cats_list) {
 
     private fun initCatsList() {
         catsAdapter = CatsAdapter { cat ->
-            router.navigateTo(Screens.catDescriptionFragment(vm.mapCatToCatDescription(cat)))
+            router.navigateTo(screen.catDescriptionFragment(cat))
         }
         with(binding.catsList) {
             adapter = catsAdapter
