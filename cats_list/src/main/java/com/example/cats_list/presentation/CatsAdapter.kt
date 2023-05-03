@@ -33,7 +33,7 @@ class CatsAdapter(private val onItemClicked: (cat: Cat) -> Unit) :
             }
             Glide.with(binding.catImage)
                 .load(cat.url)
-                .placeholder(R.drawable.cat_placeholder)
+                .placeholder(com.example.ui.R.drawable.cat_placeholder)
                 .into(binding.catImage)
         }
     }

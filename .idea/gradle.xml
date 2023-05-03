@@ -13,6 +13,8 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/cat_description" />
             <option value="$PROJECT_DIR$/cats_list" />
+            <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/core/ui" />
             <option value="$PROJECT_DIR$/database" />
             <option value="$PROJECT_DIR$/storage" />
           </set>

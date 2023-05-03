@@ -71,7 +71,7 @@ class CatDescriptionFragment : Fragment(R.layout.fragment_cat_description) {
     private fun setCatImage() {
         Glide.with(binding.catImage)
             .load(cat?.url)
-            .placeholder(R.drawable.cat_placeholder)
+            .placeholder(com.example.ui.R.drawable.cat_placeholder)
             .into(binding.catImage)
     }
 

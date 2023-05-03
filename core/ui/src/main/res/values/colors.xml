@@ -3,5 +3,6 @@
 
     <color name="cats_bg">#3eb489</color>
     <color name="white">#ffffff</color>
-    <color name="button">#006a4e</color>
+    <color name="cats_view">#006a4e</color>
+    <color name="cat_launcher_background">#FCD4D4</color>
 </resources>

@@ -70,6 +70,9 @@ class CatsListFragment : Fragment(R.layout.fragment_cats_list) {
     private fun observeLiveData() {
         vm.catsList.observe(viewLifecycleOwner) { cats ->
             catsAdapter.submitList(cats)
+            binding.catsList.visibility = View.VISIBLE
+            binding.catLoading.pauseAnimation()
+            binding.catLoading.visibility = View.GONE
         }
     }
 
