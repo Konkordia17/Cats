@@ -3,17 +3,21 @@ package com.example.cats_list.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-//import com.example.cat_description.models.CatDescription
 import com.example.cats_list.Cat
 import com.example.cats_list.domain.use_cases.GetCatsUseCase
+import com.example.cats_list.domain.use_cases.SetCatToFavoritesUseCase
 import com.example.cats_list.presentation.CatsListFragment.Companion.CATS_LIMIT
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class CatsListViewModel(private val catsUseCase: GetCatsUseCase) : ViewModel() {
+class CatsListViewModel(
+    private val catsUseCase: GetCatsUseCase,
+    private val setCatToFavoritesUseCase: SetCatToFavoritesUseCase
+) : ViewModel() {
 
     private val _catsList = MutableLiveData<List<Cat>>()
     val catsList: LiveData<List<Cat>> = _catsList
@@ -29,6 +33,15 @@ class CatsListViewModel(private val catsUseCase: GetCatsUseCase) : ViewModel() {
             val cats = catsUseCase.getCats(limit)
             currentCatsList = currentCatsList + cats
             _catsList.postValue(currentCatsList)
+        }
+    }
+
+    fun setCatToFavorites(cat: Cat, onCatAdded: () -> Unit) {
+        scope.launch(handler) {
+            setCatToFavoritesUseCase.setCatToFavorites(cat)
+            withContext(Dispatchers.Main) {
+                onCatAdded.invoke()
+            }
         }
     }
 

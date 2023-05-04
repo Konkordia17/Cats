@@ -15,6 +15,7 @@ import com.example.cats_list.di.CatsListComponent
 import com.example.cats_list.di.CatsListComponentDependenciesProvider
 import com.example.cats_list.di.DaggerCatsListComponent
 import com.example.cats_list.getCurrentPosition
+import com.example.database.di.DataModule
 import com.example.storage.data.CatsApi
 import com.github.terrakok.cicerone.Router
 import javax.inject.Inject
@@ -45,6 +46,7 @@ class CatsListFragment : Fragment(R.layout.fragment_cats_list) {
                 .getCatsListComponentDependencies()
         catsComponent = DaggerCatsListComponent.builder()
             .catsListComponentDependencies(catsComponentDependencies)
+            .dataModule(DataModule(requireActivity()))
             .build()
         catsComponent.injectCatsListFragment(this)
         vmFactory = catsComponent.getViewModelFactory()
@@ -77,9 +79,16 @@ class CatsListFragment : Fragment(R.layout.fragment_cats_list) {
     }
 
     private fun initCatsList() {
-        catsAdapter = CatsAdapter { cat ->
-            router.navigateTo(screen.catDescriptionFragment(cat))
-        }
+        catsAdapter = CatsAdapter(
+            onItemClicked = { cat ->
+                router.navigateTo(screen.catDescriptionFragment(cat))
+            },
+            onHeartClicked = { cat, view ->
+                vm.setCatToFavorites(cat){
+                    view.setImageDrawable(resources.getDrawable(com.example.ui.R.drawable.red_heart_icon, null))
+                }
+            }
+        )
         with(binding.catsList) {
             adapter = catsAdapter
             layoutManager = GridLayoutManager(context, SPAN_COUNT)

@@ -42,4 +42,12 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.43.2'
     kapt 'com.google.dagger:dagger-compiler:2.43.2'
     implementation("com.github.terrakok:cicerone:7.1")
+    //RoomDao
+    def roomVersion = "2.5.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    implementation("androidx.room:room-rxjava2:$roomVersion")
+
+    implementation("androidx.room:room-paging:2.5.1")
 }
