@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/ui" />
             <option value="$PROJECT_DIR$/database" />
+            <option value="$PROJECT_DIR$/favorite_cats" />
             <option value="$PROJECT_DIR$/storage" />
           </set>
         </option>

@@ -5,9 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.database.FavoriteCatsDatabase.Companion.DB_VERSION
-import com.example.database.model.FavoriteCat
+import com.example.database.model.DbFavoriteCat
 
-@Database(entities = [FavoriteCat::class], version = DB_VERSION, exportSchema = false)
+@Database(entities = [DbFavoriteCat::class], version = DB_VERSION, exportSchema = false)
 abstract class FavoriteCatsDatabase() : RoomDatabase() {
 
     abstract fun catsDao(): FavoriteCatsDao

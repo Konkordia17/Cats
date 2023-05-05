@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Назад</string>
+    <string name="go_to_favorites">В избранное</string>
+    <string name="delete_cat_dialog_title">Вы действительно хотите удалить котика из избранных?</string>
+    <string name="delete">Да</string>
+    <string name="cancel">Отмена</string>
+    <string name="cat_is_added_to_favorites">Котик добавлен в список избранные</string>
+    <string name="cat_is_deleted_from_favorites">Котик удален из списка избранные</string>
+    <string name="cat_is_not_added_to_favorites">Не получилось добавить котика в избранные, попробуйте еще раз</string>
+    <string name="connection_error">Ошибка сети</string>
+    <string name="delete_all">Удалить все</string>
+</resources>

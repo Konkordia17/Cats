@@ -5,18 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cats_list.Cat
 import com.example.cats_list.R
 import com.example.cats_list.databinding.FragmentCatsListBinding
 import com.example.cats_list.di.CatsListComponent
 import com.example.cats_list.di.CatsListComponentDependenciesProvider
 import com.example.cats_list.di.DaggerCatsListComponent
-import com.example.cats_list.getCurrentPosition
 import com.example.database.di.DataModule
-import com.example.storage.data.CatsApi
+import com.example.ui.extentions.getCurrentPosition
 import com.github.terrakok.cicerone.Router
 import javax.inject.Inject
 
@@ -25,9 +26,6 @@ class CatsListFragment : Fragment(R.layout.fragment_cats_list) {
     private val binding get() = _binding!!
     private lateinit var catsAdapter: CatsAdapter
     private lateinit var catsComponent: CatsListComponent
-
-    @Inject
-    lateinit var catsApi: CatsApi
 
     @Inject
     lateinit var router: Router
@@ -67,15 +65,45 @@ class CatsListFragment : Fragment(R.layout.fragment_cats_list) {
         initCatsList()
         vm.getCats(CATS_LIMIT)
         observeLiveData()
+        setOnClickListeners()
     }
 
     private fun observeLiveData() {
         vm.catsList.observe(viewLifecycleOwner) { cats ->
-            catsAdapter.submitList(cats)
-            binding.catsList.visibility = View.VISIBLE
-            binding.catLoading.pauseAnimation()
-            binding.catLoading.visibility = View.GONE
+            setDataToAdapter(cats)
         }
+        vm.getUpdateFavoritesAction().observe(viewLifecycleOwner) { isUpdated ->
+            if (null != isUpdated)
+                showIsUpdatedFavoritesMessage(isUpdated)
+        }
+    }
+
+    private fun setDataToAdapter(cats: List<Cat>) {
+        catsAdapter.submitList(cats)
+        with(binding) {
+            catsList.visibility = View.VISIBLE
+            favoritesBtn.visibility = View.VISIBLE
+            catLoading.pauseAnimation()
+            catLoading.visibility = View.GONE
+        }
+    }
+
+    private fun showIsUpdatedFavoritesMessage(isAdded: Boolean) {
+        if (isAdded) {
+            showToast(com.example.ui.R.string.cat_is_added_to_favorites)
+        } else {
+            showToast(com.example.ui.R.string.cat_is_deleted_from_favorites)
+        }
+    }
+
+    private fun setOnClickListeners() {
+        binding.favoritesBtn.setOnClickListener {
+            router.navigateTo(screen.favoriteCatsFragment())
+        }
+    }
+
+    private fun showToast(messageId: Int) {
+        Toast.makeText(requireContext(), messageId, Toast.LENGTH_SHORT).show()
     }
 
     private fun initCatsList() {
@@ -83,10 +111,8 @@ class CatsListFragment : Fragment(R.layout.fragment_cats_list) {
             onItemClicked = { cat ->
                 router.navigateTo(screen.catDescriptionFragment(cat))
             },
-            onHeartClicked = { cat, view ->
-                vm.setCatToFavorites(cat){
-                    view.setImageDrawable(resources.getDrawable(com.example.ui.R.drawable.red_heart_icon, null))
-                }
+            isAddToFavoritesClicked = { cat ->
+                vm.setOrDeleteCatFromFavorites(cat)
             }
         )
         with(binding.catsList) {
@@ -110,7 +136,7 @@ class CatsListFragment : Fragment(R.layout.fragment_cats_list) {
 
     companion object {
         private const val SPAN_COUNT = 2
-        const val CATS_LIMIT = 15
+        const val CATS_LIMIT = 25
         fun newInstance(): CatsListFragment {
             return CatsListFragment()
         }

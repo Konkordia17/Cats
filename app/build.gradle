@@ -48,5 +48,6 @@ dependencies {
 
     implementation project(path: ':cats_list')
     implementation project(path: ':cat_description')
+    implementation project(path: ':favorite_cats')
     implementation project(path: ':core:ui')
 }

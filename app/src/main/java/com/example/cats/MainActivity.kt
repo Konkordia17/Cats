@@ -25,6 +25,6 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         (application as App).appComponent.injectMainActivity(this)
         navigatorHolder.setNavigator(navigator)
-        router.replaceScreen(Screen().catsFragment())
+        router.replaceScreen(Screen().catListFragment())
     }
 }

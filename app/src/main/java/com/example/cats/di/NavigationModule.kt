@@ -2,6 +2,7 @@ package com.example.cats.di
 
 import com.example.cats.Screen
 import com.example.cats_list.presentation.Screens
+import com.example.favorite_cats.FavoriteScreens
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Router
@@ -25,9 +26,16 @@ class NavigationModule {
     fun provideNavigatorHolder(): NavigatorHolder {
         return cicerone.getNavigatorHolder()
     }
+
     @Provides
     @Singleton
     fun provideScreen(): Screens {
+        return Screen()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavoriteCatsScreen(): FavoriteScreens {
         return Screen()
     }
 }

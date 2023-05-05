@@ -7,4 +7,8 @@ interface CatsRepository {
    suspend fun getCats(limit: Int): List<Cat>
 
    suspend fun setCatToDb(cat: Cat)
+
+   suspend fun getCatsFromDb(): List<Cat>
+
+   suspend fun deleteCatFromDb(cat: Cat)
 }

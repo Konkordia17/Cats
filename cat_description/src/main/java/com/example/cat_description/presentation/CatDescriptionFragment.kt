@@ -20,6 +20,7 @@ import com.example.cat_description.di.CatDescriptionComponent
 import com.example.cat_description.di.CatDescriptionComponentDependenciesProvider
 import com.example.cat_description.di.DaggerCatDescriptionComponent
 import com.example.cat_description.models.CatDescription
+import com.github.terrakok.cicerone.Router
 import javax.inject.Inject
 
 
@@ -33,6 +34,9 @@ class CatDescriptionFragment : Fragment(R.layout.fragment_cat_description) {
     @Inject
     lateinit var vmFactory: CatDescriptionViewModelFactory
     lateinit var vm: CatDescriptionViewModel
+
+    @Inject
+    lateinit var router: Router
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -66,6 +70,7 @@ class CatDescriptionFragment : Fragment(R.layout.fragment_cat_description) {
         super.onViewCreated(view, savedInstanceState)
         setCatImage()
         setOnClickListeners()
+        observeLiveData()
     }
 
     private fun setCatImage() {
@@ -81,7 +86,7 @@ class CatDescriptionFragment : Fragment(R.layout.fragment_cat_description) {
                 val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
                 intent.addCategory("android.intent.category.DEFAULT")
                 intent.data = Uri.parse(String.format("package:%s", requireContext().packageName))
-                startActivityForResult(intent, 2296)
+                startActivityForResult(intent, REQUEST_CODE)
             } else {
                 download(url)
             }
@@ -97,16 +102,20 @@ class CatDescriptionFragment : Fragment(R.layout.fragment_cat_description) {
                     .with(requireContext())
                     .asBitmap()
                     .load(url)
-                    .into(100, 100)
+                    .into(PICTURE_SIZE, PICTURE_SIZE)
                     .get()
-            },
-            isLoadedCallback = {
-                showToast(R.string.is_downloaded_picture)
-            },
-            isErrorCallback = {
-                showToast(R.string.is_error_downloading)
             }
         )
+    }
+
+    private fun observeLiveData() {
+        vm.isPictureDownloaded.observe(viewLifecycleOwner) {
+            if (it) {
+                showToast(R.string.is_downloaded_picture)
+            } else {
+                showToast(R.string.is_error_downloading)
+            }
+        }
     }
 
     private fun showToast(stringId: Int) {
@@ -117,10 +126,16 @@ class CatDescriptionFragment : Fragment(R.layout.fragment_cat_description) {
         binding.downloadBtn.setOnClickListener {
             cat?.url?.let { url -> downloadPicture(url) }
         }
+
+        binding.backBtn.setOnClickListener {
+            router.exit()
+        }
     }
 
     companion object {
         private const val CAT_KEY = "cat_key"
+        private const val REQUEST_CODE = 2296
+        private const val PICTURE_SIZE = 100
 
         fun newInstance(cat: CatDescription): CatDescriptionFragment {
             return CatDescriptionFragment().apply {

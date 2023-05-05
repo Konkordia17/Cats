@@ -2,40 +2,38 @@ package com.example.cat_description.presentation
 
 import android.graphics.Bitmap
 import android.os.Environment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.random.Random
 
 class CatDescriptionViewModel : ViewModel() {
+    private val _isPictureDownloaded = MutableLiveData<Boolean>()
+    val isPictureDownloaded : LiveData<Boolean> = _isPictureDownloaded
 
     private val scope = CoroutineScope(Dispatchers.IO)
+    private val handler = CoroutineExceptionHandler { _, exception ->
+        println("CoroutineExceptionHandler got $exception")
+        _isPictureDownloaded.postValue(false)
+    }
 
     fun download(
-        getBitmapCallback: () -> Bitmap,
-        isLoadedCallback: () -> Unit,
-        isErrorCallback: () -> Unit
+        getBitmapCallback: () -> Bitmap
     ) {
 
-        scope.launch {
-            try {
-                val fos = FileOutputStream(getFileForSavingPicture())
-                val picture: Bitmap = getBitmapCallback.invoke()
-                picture.compress(Bitmap.CompressFormat.JPEG, 100, fos)
-                fos.flush()
-                fos.close()
-                withContext(Dispatchers.Main) {
-                    isLoadedCallback.invoke()
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    isErrorCallback.invoke()
-                }
-            }
+        scope.launch(handler) {
+            val fos = FileOutputStream(getFileForSavingPicture())
+            val picture: Bitmap = getBitmapCallback.invoke()
+            picture.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+            fos.flush()
+            fos.close()
+            _isPictureDownloaded.postValue(true)
         }
     }
 

@@ -7,4 +7,6 @@ import com.github.terrakok.cicerone.androidx.FragmentScreen
 interface Screens {
     fun catDescriptionFragment(cat: Cat) : FragmentScreen
 
+    fun favoriteCatsFragment(): FragmentScreen
+
 }

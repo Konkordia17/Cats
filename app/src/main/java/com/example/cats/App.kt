@@ -7,8 +7,12 @@ import com.example.cats.di.AppComponent
 import com.example.cats.di.DaggerAppComponent
 import com.example.cats_list.di.CatsListComponentDependencies
 import com.example.cats_list.di.CatsListComponentDependenciesProvider
+import com.example.favorite_cats.di.FavoriteCatsComponentDependencies
+import com.example.favorite_cats.di.FavoriteCatsComponentDependenciesProvider
 
-class App: Application(), CatsListComponentDependenciesProvider, CatDescriptionComponentDependenciesProvider {
+class App : Application(), CatsListComponentDependenciesProvider,
+    CatDescriptionComponentDependenciesProvider,
+    FavoriteCatsComponentDependenciesProvider {
 
     lateinit var appComponent: AppComponent
 
@@ -19,10 +23,14 @@ class App: Application(), CatsListComponentDependenciesProvider, CatDescriptionC
     }
 
     override fun getCatsListComponentDependencies(): CatsListComponentDependencies {
-       return appComponent
+        return appComponent
     }
 
     override fun getCatDescriptionComponentDependencies(): CatDescriptionComponentDependencies {
-      return appComponent
+        return appComponent
+    }
+
+    override fun getFavoriteCatsComponentDependencies(): FavoriteCatsComponentDependencies {
+        return appComponent
     }
 }
